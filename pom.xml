@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.gurkensalat.android.commons</groupId>
+        <artifactId>android-commons-oss</artifactId>
+        <version>0.2.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.gurkensalat.android.xingsync</groupId>
+    <artifactId>panobot-remote-controller-parent</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>panobot-remote-controller</name>
+
+    <inceptionYear>2013</inceptionYear>
+    <url>http://hakan42.github.com/panobot-android-remote-controller/</url>
+    <description>Remote control software for Arduino PIC</description>
+
+    <modules>
+        <!-- <module>panobot-remote-controller</module> -->
+        <!-- <module>panobot-remote-controller-example-data</module> -->
+        <!-- <module>panobot-remote-controller-it</module> -->
+    </modules>
+
+    <properties>
+        <platform.version>4.0.1.2</platform.version>
+        <platform.sdk.version>14</platform.sdk.version>
+
+        <!-- The device setting must be defined in the developer settings -->
+        <!-- <android.device>emulator</android.device> -->
+    </properties>
+
+    <scm>
+        <url>https://github.com/hakan42/panobot-android-remote-controller</url>
+        <connection>scm:git:https://github.com/hakan42/panobot-android-remote-controller.git</connection>
+        <developerConnection>scm:git:https://github.com/hakan42/panobot-android-remote-controller.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/hakan42/panobot-android-remote-controller/issues</url>
+    </issueManagement>
+
+    <dependencyManagement>
+        <dependencies>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <inherited>true</inherited>
+                    <configuration>
+                        <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                        <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+                        <resourceDirectory>${project.basedir}/res</resourceDirectory>
+                        <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
+                        <sdk>
+                            <platform>${platform.sdk.version}</platform>
+                        </sdk>
+                        <undeployBeforeDeploy>false</undeployBeforeDeploy>
+                    </configuration>
+                </plugin>
+            </plugins>
+
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>com.github.goldin</groupId>
+                <artifactId>copy-maven-plugin</artifactId>
+                <configuration>
+                    <failIfNotFound>false</failIfNotFound>
+                    <resources>
+                        <!--
+                        <resource>
+                            <targetPath>${project.basedir}/src/site/markdown</targetPath>
+                            <directory>${project.basedir}</directory>
+                            <include>*.md</include>
+                            <exclude>README.md</exclude>
+                        </resource>
+                        -->
+                        <resource>
+                            <targetPath>${project.basedir}/src/site/markdown</targetPath>
+                            <file>${project.basedir}/README.md</file>
+                            <destFileName>index.md.vm</destFileName>
+                        </resource>
+                        <resource>
+                            <targetPath>${project.basedir}/src/site/markdown</targetPath>
+                            <file>${project.basedir}/CONTRIBUTING.md</file>
+                            <destFileName>contributing.md.vm</destFileName>
+                        </resource>
+                    </resources>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>copy-md-files</id>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-signing-properties</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireProperty>
+                                    <property>sign.keystore</property>
+                                    <message>The 'sign.keystore' property is missing.</message>
+                                </requireProperty>
+                                <requireFilesExist>
+                                    <files>
+                                        <file>${sign.keystore}</file>
+                                    </files>
+                                    <message>The 'sign.keystore' property does not point to a file.</message>
+                                </requireFilesExist>
+                                <requireProperty>
+                                    <property>sign.alias</property>
+                                    <message>The 'sign.alias' property is missing.</message>
+                                </requireProperty>
+                                <requireProperty>
+                                    <property>sign.storepass</property>
+                                    <message>The 'sign.storepass' property is missing.</message>
+                                </requireProperty>
+                                <requireProperty>
+                                    <property>sign.keypass</property>
+                                    <message>The 'sign.keypass' property is missing.</message>
+                                </requireProperty>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>performRelease</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>
